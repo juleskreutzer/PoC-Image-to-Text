@@ -17,6 +17,8 @@ npm install
 GOOGLE_APPLICATION_CREDENTIALS=google-credentials.json npm run start
 ```
 
+When the application has started you can test it using [http://localhost:3000](http://localhost:3000).
+
 
 
 
