@@ -1,5 +1,6 @@
-import {Request, RestBindings, get, ResponseObject} from '@loopback/rest';
 import {inject} from '@loopback/context';
+import {get, Request, ResponseObject, RestBindings} from '@loopback/rest';
+import {VisionService} from '../services';
 
 /**
  * OpenAPI response for ping()
@@ -32,7 +33,8 @@ const PING_RESPONSE: ResponseObject = {
  * A simple controller to bounce back http requests
  */
 export class PingController {
-  constructor(@inject(RestBindings.Http.REQUEST) private req: Request) {}
+  constructor(@inject(RestBindings.Http.REQUEST) private req: Request,
+    @inject('services.VisionService') private visionService: VisionService) {}
 
   // Map to `GET /ping`
   @get('/ping', {
@@ -48,5 +50,17 @@ export class PingController {
       url: this.req.url,
       headers: Object.assign({}, this.req.headers),
     };
+  }
+
+  @get('/test', {
+    responses: {
+      '204': {
+        description: 'See console output'
+      }
+    }
+  })
+  async test(): Promise<string> {
+    const data = await this.visionService.analyseImage('test.png');
+    return JSON.stringify(data);
   }
 }

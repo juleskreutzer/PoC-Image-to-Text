@@ -1,20 +1,21 @@
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
-import {
-  RestExplorerBindings,
-  RestExplorerComponent,
-} from '@loopback/rest-explorer';
 import {RepositoryMixin} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
+import {RestExplorerBindings, RestExplorerComponent} from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
+import {CheckEnv} from './check-env';
 import {MySequence} from './sequence';
+import {VisionService} from './services';
 
 export class PocApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
 ) {
   constructor(options: ApplicationConfig = {}) {
     super(options);
+
+    CheckEnv.check()
 
     // Set up the custom sequence
     this.sequence(MySequence);
@@ -38,5 +39,7 @@ export class PocApplication extends BootMixin(
         nested: true,
       },
     };
+
+    this.service(VisionService);
   }
 }
